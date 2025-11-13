@@ -8,6 +8,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Custom Login Page (Override Fortify)
+Route::get('/login', \App\Livewire\Auth\LoginForm::class)
+    ->middleware('guest')
+    ->name('login');
+
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
