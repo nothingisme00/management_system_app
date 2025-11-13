@@ -23,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
     ];
 
     /**
@@ -60,5 +61,53 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    /**
+     * Get the role that owns the user.
+     */
+    public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Check if user has a specific role.
+     */
+    public function hasRole(string $roleName): bool
+    {
+        return $this->role?->name === $roleName;
+    }
+
+    /**
+     * Check if user is an admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('Admin');
+    }
+
+    /**
+     * Check if user is HRD.
+     */
+    public function isHRD(): bool
+    {
+        return $this->hasRole('HRD');
+    }
+
+    /**
+     * Check if user is a manager.
+     */
+    public function isManager(): bool
+    {
+        return $this->hasRole('Manager');
+    }
+
+    /**
+     * Check if user is a karyawan.
+     */
+    public function isKaryawan(): bool
+    {
+        return $this->hasRole('Karyawan');
     }
 }

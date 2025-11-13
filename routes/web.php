@@ -12,6 +12,23 @@ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+// Role-based dashboards
+Route::middleware(['auth', 'verified', 'role:Admin'])->group(function () {
+    Route::get('dashboard-admin', \App\Livewire\Admin\Dashboard::class)->name('dashboard.admin');
+});
+
+Route::middleware(['auth', 'verified', 'role:HRD'])->group(function () {
+    Route::get('dashboard-hrd', \App\Livewire\HRD\Dashboard::class)->name('dashboard.hrd');
+});
+
+Route::middleware(['auth', 'verified', 'role:Manager'])->group(function () {
+    Route::get('dashboard-manager', \App\Livewire\Manager\Dashboard::class)->name('dashboard.manager');
+});
+
+Route::middleware(['auth', 'verified', 'role:Karyawan'])->group(function () {
+    Route::get('dashboard-karyawan', \App\Livewire\Karyawan\Dashboard::class)->name('dashboard.karyawan');
+});
+
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
