@@ -1,13 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Auth;
 
+use App\Contracts\Services\AuthenticationServiceInterface;
+use App\Contracts\Services\AuthorizationServiceInterface;
+use App\DTOs\LoginDTO;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
+/**
+ * Login Form Component
+ *
+ * Handles user authentication using clean architecture with services.
+ */
 class LoginForm extends Component
 {
     #[Rule('required|email')]
@@ -18,65 +27,54 @@ class LoginForm extends Component
 
     public bool $remember = false;
 
+    /**
+     * Constructor with dependency injection.
+     */
+    public function __construct(
+        protected AuthenticationServiceInterface $authService,
+        protected AuthorizationServiceInterface $authorizationService
+    ) {
+    }
+
+    /**
+     * Handle login submission.
+     */
     public function login(): void
     {
         $this->validate();
 
-        $this->ensureIsNotRateLimited();
+        try {
+            // Create DTO from form data
+            $credentials = new LoginDTO(
+                email: $this->email,
+                password: $this->password,
+                remember: $this->remember
+            );
 
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
-            RateLimiter::hit($this->throttleKey());
+            // Authenticate via service (handles rate limiting, auth, events)
+            $userDTO = $this->authService->login($credentials);
 
-            throw ValidationException::withMessages([
-                'email' => __('These credentials do not match our records.'),
-            ]);
+            // Redirect to role-specific dashboard
+            $this->redirectByRole();
+        } catch (ValidationException $e) {
+            // Re-throw validation exceptions to display errors
+            throw $e;
         }
-
-        RateLimiter::clear($this->throttleKey());
-
-        session()->regenerate();
-
-        $this->redirectByRole();
     }
 
-    protected function ensureIsNotRateLimited(): void
-    {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
-            return;
-        }
-
-        $seconds = RateLimiter::availableIn($this->throttleKey());
-
-        throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
-        ]);
-    }
-
-    protected function throttleKey(): string
-    {
-        return strtolower($this->email).'|'.request()->ip();
-    }
-
+    /**
+     * Redirect user to their role-specific dashboard.
+     */
     protected function redirectByRole(): void
     {
         $user = Auth::user();
 
+        // Get dashboard route from authorization service
+        $dashboardRoute = $this->authorizationService->getDashboardRoute($user);
+
         // Use full page redirect (not wire:navigate) to ensure clean browser state
         // This prevents bfcache issues with back button after login
-        if ($user->isAdmin()) {
-            $this->redirect(route('dashboard.admin'), navigate: false);
-        } elseif ($user->isHRD()) {
-            $this->redirect(route('dashboard.hrd'), navigate: false);
-        } elseif ($user->isManager()) {
-            $this->redirect(route('dashboard.manager'), navigate: false);
-        } elseif ($user->isKaryawan()) {
-            $this->redirect(route('dashboard.karyawan'), navigate: false);
-        } else {
-            $this->redirect(route('dashboard'), navigate: false);
-        }
+        $this->redirect(route($dashboardRoute), navigate: false);
     }
 
     public function render()

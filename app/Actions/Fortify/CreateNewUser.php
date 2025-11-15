@@ -1,16 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Fortify;
 
-use App\Models\Role;
+use App\Contracts\Services\UserServiceInterface;
+use App\DTOs\RegisterDTO;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 
+/**
+ * Create New User Action
+ *
+ * Fortify action for user registration using UserService.
+ */
 class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
+
+    /**
+     * Constructor with dependency injection.
+     */
+    public function __construct(
+        protected UserServiceInterface $userService
+    ) {
+    }
 
     /**
      * Validate and create a newly registered user.
@@ -19,6 +35,7 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+        // Validate input (required by Fortify contract)
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -31,14 +48,19 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        // Get default role (Karyawan) for new registrations
-        $defaultRole = Role::where('name', 'Karyawan')->first();
+        // Create DTO from validated input
+        $registerData = new RegisterDTO(
+            name: $input['name'],
+            email: $input['email'],
+            password: $input['password'],
+            roleId: null // Will use default role (Karyawan)
+        );
 
-        return User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => $input['password'],
-            'role_id' => $defaultRole?->id,
-        ]);
+        // Create user via service (handles hashing, role assignment, events)
+        $userDTO = $this->userService->createUser($registerData);
+
+        // Return User model (required by Fortify contract)
+        // We need to fetch the actual model since service returns DTO
+        return User::findOrFail($userDTO->id);
     }
 }
