@@ -38,6 +38,17 @@ Route::get('dashboard', function () {
 // Role-based dashboards
 Route::middleware(['auth', 'verified', 'role:Admin', 'prevent.back'])->group(function () {
     Route::get('dashboard-admin', \App\Livewire\Admin\Dashboard::class)->name('dashboard.admin');
+
+    // Employee Management Routes
+    Route::get('employees', \App\Livewire\Admin\Employees\Index::class)->name('employees.index');
+    Route::get('employees/create', \App\Livewire\Admin\Employees\Create::class)->name('employees.create');
+    Route::get('employees/{employee}/edit', \App\Livewire\Admin\Employees\Edit::class)->name('employees.edit');
+
+    // Department Management Routes
+    Route::get('departments', \App\Livewire\Admin\Departments\Index::class)->name('departments.index');
+
+    // Position Management Routes
+    Route::get('positions', \App\Livewire\Admin\Positions\Index::class)->name('positions.index');
 });
 
 Route::middleware(['auth', 'verified', 'role:HRD', 'prevent.back'])->group(function () {
