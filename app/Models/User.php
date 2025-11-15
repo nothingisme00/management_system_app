@@ -73,6 +73,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the employee record associated with the user.
+     */
+    public function employee(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Employee::class);
+    }
+
+    /**
      * Check if user has a specific role.
      */
     public function hasRole(string $roleName): bool
