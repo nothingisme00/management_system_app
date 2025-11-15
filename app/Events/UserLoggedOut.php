@@ -23,6 +23,5 @@ class UserLoggedOut
      */
     public function __construct(
         public User $user
-    ) {
-    }
+    ) {}
 }

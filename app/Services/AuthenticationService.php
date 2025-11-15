@@ -23,8 +23,7 @@ class AuthenticationService implements AuthenticationServiceInterface
 {
     public function __construct(
         protected UserRepositoryInterface $userRepository
-    ) {
-    }
+    ) {}
 
     public function login(LoginDTO $credentials): UserDTO
     {

@@ -18,6 +18,5 @@ final readonly class CreatePositionDTO extends BaseDTO
         public int $level,
         public ?int $departmentId,
         public bool $isActive = true,
-    ) {
-    }
+    ) {}
 }

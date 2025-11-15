@@ -16,6 +16,5 @@ final readonly class UpdateDepartmentDTO extends BaseDTO
         public string $code,
         public ?string $description,
         public bool $isActive,
-    ) {
-    }
+    ) {}
 }

@@ -23,6 +23,5 @@ final readonly class CreateEmployeeDTO extends BaseDTO
         public ?string $address,
         public string $joinDate,
         public string $employmentStatus = 'active',
-    ) {
-    }
+    ) {}
 }

@@ -21,8 +21,7 @@ final readonly class UserDTO extends BaseDTO
         public ?string $roleName,
         public ?string $createdAt,
         public ?string $lastLoginAt = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Create from User model.

@@ -22,6 +22,5 @@ final readonly class UpdateEmployeeDTO extends BaseDTO
         public string $joinDate,
         public ?string $terminationDate,
         public string $employmentStatus,
-    ) {
-    }
+    ) {}
 }

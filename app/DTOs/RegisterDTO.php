@@ -16,8 +16,7 @@ final readonly class RegisterDTO extends BaseDTO
         public string $email,
         public string $password,
         public ?int $roleId = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Create from request data.

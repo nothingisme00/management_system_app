@@ -21,8 +21,7 @@ class RoleMiddleware
      */
     public function __construct(
         protected AuthorizationServiceInterface $authorizationService
-    ) {
-    }
+    ) {}
 
     /**
      * Handle an incoming request.

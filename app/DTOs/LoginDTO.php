@@ -15,8 +15,7 @@ final readonly class LoginDTO extends BaseDTO
         public string $email,
         public string $password,
         public bool $remember = false,
-    ) {
-    }
+    ) {}
 
     /**
      * Create from request data.

@@ -25,8 +25,7 @@ final readonly class PositionDTO extends BaseDTO
         public bool $isActive,
         public ?string $createdAt,
         public ?string $updatedAt,
-    ) {
-    }
+    ) {}
 
     /**
      * Create from Position model.

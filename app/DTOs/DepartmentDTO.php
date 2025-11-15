@@ -21,8 +21,7 @@ final readonly class DepartmentDTO extends BaseDTO
         public bool $isActive,
         public ?string $createdAt,
         public ?string $updatedAt,
-    ) {
-    }
+    ) {}
 
     /**
      * Create from Department model.

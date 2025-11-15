@@ -33,8 +33,7 @@ final readonly class EmployeeDTO extends BaseDTO
         public string $userEmail,
         public ?string $createdAt,
         public ?string $updatedAt,
-    ) {
-    }
+    ) {}
 
     /**
      * Create from Employee model.
