@@ -36,7 +36,7 @@ class LoginForm extends Component
 
         session()->regenerate();
 
-        $this->redirectIntended();
+        $this->redirectByRole();
     }
 
     protected function ensureIsNotRateLimited(): void
@@ -60,27 +60,28 @@ class LoginForm extends Component
         return strtolower($this->email).'|'.request()->ip();
     }
 
-    protected function redirectIntended(): void
+    protected function redirectByRole(): void
     {
         $user = Auth::user();
 
-        // Redirect based on role
+        // Use full page redirect (not wire:navigate) to ensure clean browser state
+        // This prevents bfcache issues with back button after login
         if ($user->isAdmin()) {
-            $this->redirect(route('dashboard.admin'), navigate: true);
+            $this->redirect(route('dashboard.admin'), navigate: false);
         } elseif ($user->isHRD()) {
-            $this->redirect(route('dashboard.hrd'), navigate: true);
+            $this->redirect(route('dashboard.hrd'), navigate: false);
         } elseif ($user->isManager()) {
-            $this->redirect(route('dashboard.manager'), navigate: true);
+            $this->redirect(route('dashboard.manager'), navigate: false);
         } elseif ($user->isKaryawan()) {
-            $this->redirect(route('dashboard.karyawan'), navigate: true);
+            $this->redirect(route('dashboard.karyawan'), navigate: false);
         } else {
-            $this->redirect(route('dashboard'), navigate: true);
+            $this->redirect(route('dashboard'), navigate: false);
         }
     }
 
     public function render()
     {
         return view('livewire.auth.login-form')
-            ->layout('components.layouts.auth', ['title' => 'Login']);
+            ->layout('layouts.auth', ['title' => 'Login']);
     }
 }
