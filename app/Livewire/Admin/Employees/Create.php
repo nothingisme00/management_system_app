@@ -23,8 +23,6 @@ class Create extends Component
 
     public string $email = '';
 
-    public string $password = '';
-
     public ?int $role_id = null;
 
     public ?int $department_id = null;
@@ -55,7 +53,6 @@ class Create extends Component
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8'],
             'role_id' => ['required', 'integer', 'exists:roles,id'],
             'department_id' => ['nullable', 'integer', 'exists:departments,id'],
             'position_id' => ['nullable', 'integer', 'exists:positions,id'],
@@ -76,8 +73,6 @@ class Create extends Component
             'email.required' => 'Email address is required.',
             'email.email' => 'Please provide a valid email address.',
             'email.unique' => 'This email address is already registered.',
-            'password.required' => 'Password is required.',
-            'password.min' => 'Password must be at least 8 characters.',
             'role_id.required' => 'Role is required.',
             'join_date.required' => 'Join date is required.',
             'join_date.before_or_equal' => 'Join date cannot be in the future.',
@@ -94,7 +89,6 @@ class Create extends Component
         $dto = new CreateEmployeeDTO(
             name: $this->name,
             email: $this->email,
-            password: $this->password,
             roleId: $this->role_id,
             departmentId: $this->department_id,
             positionId: $this->position_id,

@@ -7,7 +7,6 @@ namespace App\Http\Requests;
 use App\DTOs\CreateEmployeeDTO;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
 
 /**
  * Store Employee Request
@@ -34,7 +33,6 @@ class StoreEmployeeRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
-            'password' => ['required', 'string', Password::min(8)],
             'role_id' => ['required', 'integer', Rule::exists('roles', 'id')],
             'department_id' => ['nullable', 'integer', Rule::exists('departments', 'id')],
             'position_id' => ['nullable', 'integer', Rule::exists('positions', 'id')],
@@ -57,7 +55,6 @@ class StoreEmployeeRequest extends FormRequest
             'email.required' => 'Email address is required.',
             'email.email' => 'Please provide a valid email address.',
             'email.unique' => 'This email address is already registered.',
-            'password.required' => 'Password is required.',
             'role_id.required' => 'Role is required.',
             'role_id.exists' => 'The selected role does not exist.',
             'department_id.exists' => 'The selected department does not exist.',
@@ -78,7 +75,6 @@ class StoreEmployeeRequest extends FormRequest
         return new CreateEmployeeDTO(
             name: $validated['name'],
             email: $validated['email'],
-            password: $validated['password'],
             roleId: $validated['role_id'],
             departmentId: $validated['department_id'] ?? null,
             positionId: $validated['position_id'] ?? null,

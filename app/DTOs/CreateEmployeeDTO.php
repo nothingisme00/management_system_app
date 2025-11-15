@@ -15,7 +15,6 @@ final readonly class CreateEmployeeDTO extends BaseDTO
     public function __construct(
         public string $name,
         public string $email,
-        public string $password,
         public int $roleId,
         public ?int $departmentId,
         public ?int $positionId,
@@ -23,5 +22,6 @@ final readonly class CreateEmployeeDTO extends BaseDTO
         public ?string $address,
         public string $joinDate,
         public string $employmentStatus = 'active',
+        public string $password = 'pass1234',
     ) {}
 }
