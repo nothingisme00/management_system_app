@@ -17,7 +17,22 @@ class PositionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->unique()->jobTitle(),
+            'code' => strtoupper(fake()->unique()->lexify('???')),
+            'description' => fake()->sentence(),
+            'level' => fake()->numberBetween(1, 5),
+            'department_id' => null, // Will be set by seeder or test
+            'is_active' => true,
         ];
+    }
+
+    /**
+     * Indicate that the position is inactive.
+     */
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_active' => false,
+        ]);
     }
 }
