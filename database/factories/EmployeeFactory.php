@@ -16,13 +16,17 @@ class EmployeeFactory extends Factory
      */
     public function definition(): array
     {
-        $year = now()->year;
+        // Get a random department to ensure employee_id generation works
+        $department = \App\Models\Department::inRandomOrder()->first()
+            ?? \App\Models\Department::factory()->create();
+
+        $departmentCode = $department->code;
         $sequence = fake()->unique()->numberBetween(1, 9999);
 
         return [
             'user_id' => \App\Models\User::factory(),
-            'employee_id' => sprintf('EMP-%d-%04d', $year, $sequence),
-            'department_id' => null, // Will be set by seeder or test
+            'employee_id' => sprintf('EMP-%s-%04d', strtoupper($departmentCode), $sequence),
+            'department_id' => $department->id,
             'position_id' => null, // Will be set by seeder or test
             'phone_number' => fake()->phoneNumber(),
             'address' => fake()->address(),

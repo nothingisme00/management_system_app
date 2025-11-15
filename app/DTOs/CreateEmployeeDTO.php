@@ -16,7 +16,7 @@ final readonly class CreateEmployeeDTO extends BaseDTO
         public string $name,
         public string $email,
         public int $roleId,
-        public ?int $departmentId,
+        public int $departmentId,
         public ?int $positionId,
         public ?string $phoneNumber,
         public ?string $address,

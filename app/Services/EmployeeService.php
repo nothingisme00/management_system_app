@@ -11,6 +11,7 @@ use App\DTOs\CreateEmployeeDTO;
 use App\DTOs\EmployeeDTO;
 use App\DTOs\UpdateEmployeeDTO;
 use App\Helpers\EmployeeIdGenerator;
+use App\Models\Department;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -95,10 +96,14 @@ class EmployeeService implements EmployeeServiceInterface
 
             $user = $this->userRepository->create($userData);
 
-            // Step 2: Auto-generate Employee ID
-            $employeeId = EmployeeIdGenerator::generate();
+            // Step 2: Get department code for Employee ID generation
+            $department = Department::find($data->departmentId);
+            $departmentCode = $department->code;
 
-            // Step 3: Create Employee record
+            // Step 3: Auto-generate Employee ID with department code
+            $employeeId = EmployeeIdGenerator::generate($departmentCode);
+
+            // Step 4: Create Employee record
             $employeeData = [
                 'user_id' => $user->id,
                 'employee_id' => $employeeId,

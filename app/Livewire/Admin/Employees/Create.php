@@ -54,7 +54,7 @@ class Create extends Component
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'role_id' => ['required', 'integer', 'exists:roles,id'],
-            'department_id' => ['nullable', 'integer', 'exists:departments,id'],
+            'department_id' => ['required', 'integer', 'exists:departments,id'],
             'position_id' => ['nullable', 'integer', 'exists:positions,id'],
             'phone_number' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:500'],
@@ -74,6 +74,7 @@ class Create extends Component
             'email.email' => 'Please provide a valid email address.',
             'email.unique' => 'This email address is already registered.',
             'role_id.required' => 'Role is required.',
+            'department_id.required' => 'Department is required.',
             'join_date.required' => 'Join date is required.',
             'join_date.before_or_equal' => 'Join date cannot be in the future.',
         ];

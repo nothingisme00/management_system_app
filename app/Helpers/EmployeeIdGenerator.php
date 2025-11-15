@@ -9,29 +9,28 @@ use App\Models\Employee;
 /**
  * Employee ID Generator
  *
- * Generates unique employee IDs in the format: EMP-YYYY-XXXX
- * Where YYYY is the current year and XXXX is a sequential number.
+ * Generates unique employee IDs in the format: EMP-DEPT-XXXX
+ * Where DEPT is the department code and XXXX is a sequential number.
  */
 class EmployeeIdGenerator
 {
     /**
      * Generate a unique employee ID.
      *
-     * Format: EMP-YYYY-XXXX (e.g., EMP-2025-0001)
+     * Format: EMP-DEPT-XXXX (e.g., EMP-IT-0001, EMP-HR-0023)
      */
-    public static function generate(): string
+    public static function generate(string $departmentCode): string
     {
-        $year = now()->year;
-        $prefix = "EMP-{$year}-";
+        $prefix = 'EMP-'.strtoupper($departmentCode).'-';
 
-        // Get the latest employee ID for the current year
+        // Get the latest employee ID with this prefix
         $latestEmployee = Employee::query()
             ->where('employee_id', 'like', "{$prefix}%")
             ->orderByDesc('employee_id')
             ->first();
 
         if (! $latestEmployee) {
-            // First employee of the year
+            // First employee with this department code
             return $prefix.'0001';
         }
 
@@ -47,22 +46,26 @@ class EmployeeIdGenerator
 
     /**
      * Validate employee ID format.
+     *
+     * Valid format: EMP-DEPT-XXXX (e.g., EMP-IT-0001)
      */
     public static function isValid(string $employeeId): bool
     {
-        return (bool) preg_match('/^EMP-\d{4}-\d{4}$/', $employeeId);
+        return (bool) preg_match('/^EMP-[A-Z]+-\d{4}$/', $employeeId);
     }
 
     /**
-     * Extract year from employee ID.
+     * Extract department code from employee ID.
      */
-    public static function extractYear(string $employeeId): ?int
+    public static function extractDepartmentCode(string $employeeId): ?string
     {
         if (! self::isValid($employeeId)) {
             return null;
         }
 
-        return (int) substr($employeeId, 4, 4);
+        $parts = explode('-', $employeeId);
+
+        return $parts[1] ?? null;
     }
 
     /**
