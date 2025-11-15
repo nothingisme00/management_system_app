@@ -28,19 +28,14 @@ class LoginForm extends Component
     public bool $remember = false;
 
     /**
-     * Constructor with dependency injection.
-     */
-    public function __construct(
-        protected AuthenticationServiceInterface $authService,
-        protected AuthorizationServiceInterface $authorizationService
-    ) {
-    }
-
-    /**
      * Handle login submission.
+     *
+     * Uses method injection for services (Livewire doesn't support constructor DI).
      */
-    public function login(): void
-    {
+    public function login(
+        AuthenticationServiceInterface $authService,
+        AuthorizationServiceInterface $authorizationService
+    ): void {
         $this->validate();
 
         try {
@@ -52,10 +47,10 @@ class LoginForm extends Component
             );
 
             // Authenticate via service (handles rate limiting, auth, events)
-            $userDTO = $this->authService->login($credentials);
+            $userDTO = $authService->login($credentials);
 
             // Redirect to role-specific dashboard
-            $this->redirectByRole();
+            $this->redirectByRole($authorizationService);
         } catch (ValidationException $e) {
             // Re-throw validation exceptions to display errors
             throw $e;
@@ -65,12 +60,12 @@ class LoginForm extends Component
     /**
      * Redirect user to their role-specific dashboard.
      */
-    protected function redirectByRole(): void
+    protected function redirectByRole(AuthorizationServiceInterface $authorizationService): void
     {
         $user = Auth::user();
 
         // Get dashboard route from authorization service
-        $dashboardRoute = $this->authorizationService->getDashboardRoute($user);
+        $dashboardRoute = $authorizationService->getDashboardRoute($user);
 
         // Use full page redirect (not wire:navigate) to ensure clean browser state
         // This prevents bfcache issues with back button after login
