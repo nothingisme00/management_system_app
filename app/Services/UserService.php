@@ -23,8 +23,7 @@ class UserService implements UserServiceInterface
     public function __construct(
         protected UserRepositoryInterface $userRepository,
         protected RoleRepositoryInterface $roleRepository
-    ) {
-    }
+    ) {}
 
     public function getAllUsers(): Collection
     {
@@ -72,23 +71,35 @@ class UserService implements UserServiceInterface
         return UserDTO::fromModel($user);
     }
 
-    public function updateUser(int $id, array $data): UserDTO
+    public function updateUser(int $id, array $data): ?UserDTO
     {
-        // Hash password if provided
-        if (isset($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
+        try {
+            // Hash password if provided
+            if (isset($data['password'])) {
+                $data['password'] = Hash::make($data['password']);
+            }
+
+            $updated = $this->userRepository->update($id, $data);
+
+            if (! $updated) {
+                return null;
+            }
+
+            $user = $this->userRepository->findWithRole($id);
+
+            return $user ? UserDTO::fromModel($user) : null;
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return null;
         }
-
-        $this->userRepository->update($id, $data);
-
-        $user = $this->userRepository->findWithRole($id);
-
-        return UserDTO::fromModel($user);
     }
 
     public function deleteUser(int $id): bool
     {
-        return $this->userRepository->delete($id);
+        try {
+            return $this->userRepository->delete($id);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return false;
+        }
     }
 
     public function getUsersByRole(string $roleName): Collection

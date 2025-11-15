@@ -38,7 +38,7 @@ interface UserServiceInterface
     /**
      * Update user.
      */
-    public function updateUser(int $id, array $data): UserDTO;
+    public function updateUser(int $id, array $data): ?UserDTO;
 
     /**
      * Delete user.

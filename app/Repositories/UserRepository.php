@@ -54,14 +54,14 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function updateLastLogin(int $userId): bool
     {
-        return $this->model
+        return (bool) $this->model
             ->where('id', $userId)
             ->update(['last_login_at' => now()]);
     }
 
     public function assignRole(int $userId, int $roleId): bool
     {
-        return $this->model
+        return (bool) $this->model
             ->where('id', $userId)
             ->update(['role_id' => $roleId]);
     }

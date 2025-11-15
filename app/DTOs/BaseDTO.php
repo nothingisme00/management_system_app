@@ -12,7 +12,7 @@ use JsonSerializable;
  * Provides common functionality for all DTOs including
  * array conversion, JSON serialization, and immutability.
  */
-abstract class BaseDTO implements JsonSerializable
+abstract readonly class BaseDTO implements JsonSerializable
 {
     /**
      * Convert DTO to array.

@@ -57,17 +57,17 @@ class AuthorizationService implements AuthorizationServiceInterface
             self::ROLE_HRD => 'dashboard.hrd',
             self::ROLE_MANAGER => 'dashboard.manager',
             self::ROLE_KARYAWAN => 'dashboard.karyawan',
-            default => 'dashboard',
+            default => 'dashboard.karyawan',
         };
     }
 
     public function canAccessDashboard(User $user, string $dashboardType): bool
     {
         $allowedDashboard = match ($user->role?->name) {
-            self::ROLE_ADMIN => 'admin',
-            self::ROLE_HRD => 'hrd',
-            self::ROLE_MANAGER => 'manager',
-            self::ROLE_KARYAWAN => 'karyawan',
+            self::ROLE_ADMIN => self::ROLE_ADMIN,
+            self::ROLE_HRD => self::ROLE_HRD,
+            self::ROLE_MANAGER => self::ROLE_MANAGER,
+            self::ROLE_KARYAWAN => self::ROLE_KARYAWAN,
             default => null,
         };
 
