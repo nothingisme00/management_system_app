@@ -8,7 +8,9 @@ use App\Contracts\Services\DepartmentServiceInterface;
 use App\Contracts\Services\EmployeeServiceInterface;
 use App\Contracts\Services\PositionServiceInterface;
 use App\DTOs\CreateEmployeeDTO;
+use App\Models\Position;
 use App\Models\Role;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 /**
@@ -27,7 +29,7 @@ class Create extends Component
 
     public ?int $department_id = null;
 
-    public ?int $position_id = null;
+    public ?string $position_name = '';
 
     public string $phone_number = '';
 
@@ -55,7 +57,7 @@ class Create extends Component
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'role_id' => ['required', 'integer', 'exists:roles,id'],
             'department_id' => ['required', 'integer', 'exists:departments,id'],
-            'position_id' => ['nullable', 'integer', 'exists:positions,id'],
+            'position_name' => ['nullable', 'string', 'max:100'],
             'phone_number' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:500'],
             'join_date' => ['required', 'date', 'before_or_equal:today'],
@@ -87,12 +89,25 @@ class Create extends Component
     {
         $this->validate();
 
+        // Find or create position by name
+        $positionId = null;
+        if (! empty($this->position_name)) {
+            $position = Position::firstOrCreate(
+                ['name' => trim($this->position_name)],
+                [
+                    'code' => strtoupper(Str::slug(trim($this->position_name))),
+                    'is_active' => true,
+                ]
+            );
+            $positionId = $position->id;
+        }
+
         $dto = new CreateEmployeeDTO(
             name: $this->name,
             email: $this->email,
             roleId: $this->role_id,
             departmentId: $this->department_id,
-            positionId: $this->position_id,
+            positionId: $positionId,
             phoneNumber: $this->phone_number ?: null,
             address: $this->address ?: null,
             joinDate: $this->join_date,

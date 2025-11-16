@@ -104,11 +104,16 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Position
                         </label>
-                        <flux:select wire:model="position_id" placeholder="Select Position">
+                        <input type="text"
+                               wire:model="position_name"
+                               list="positions-list"
+                               placeholder="Type or select position..."
+                               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
+                        <datalist id="positions-list">
                             @foreach($positions as $position)
-                                <option value="{{ $position->id }}">{{ $position->name }} (Level {{ $position->level }})</option>
+                                <option value="{{ $position->name }}">Level {{ $position->level ?? 'N/A' }}</option>
                             @endforeach
-                        </flux:select>
+                        </datalist>
                     </div>
 
                     {{-- Join Date --}}

@@ -55,7 +55,7 @@ class Index extends Component
     public function render()
     {
         $users = User::query()
-            ->with('role')
+            ->with(['role', 'employee.department'])
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('name', 'like', "%{$this->search}%")

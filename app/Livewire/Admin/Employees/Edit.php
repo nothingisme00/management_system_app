@@ -8,7 +8,9 @@ use App\Contracts\Services\DepartmentServiceInterface;
 use App\Contracts\Services\EmployeeServiceInterface;
 use App\Contracts\Services\PositionServiceInterface;
 use App\DTOs\UpdateEmployeeDTO;
+use App\Models\Position;
 use App\Models\Role;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class Edit extends Component
@@ -23,7 +25,7 @@ class Edit extends Component
 
     public ?int $department_id = null;
 
-    public ?int $position_id = null;
+    public ?string $position_name = '';
 
     public string $phone_number = '';
 
@@ -50,7 +52,7 @@ class Edit extends Component
         $this->email = $employeeData->userEmail;
         $this->role_id = $employeeData->userId;
         $this->department_id = $employeeData->departmentId;
-        $this->position_id = $employeeData->positionId;
+        $this->position_name = $employeeData->positionName ?? '';
         $this->phone_number = $employeeData->phoneNumber ?? '';
         $this->address = $employeeData->address ?? '';
         $this->join_date = $employeeData->joinDate;
@@ -66,7 +68,7 @@ class Edit extends Component
             'email' => ['required', 'email', 'max:255'],
             'role_id' => ['required', 'integer', 'exists:roles,id'],
             'department_id' => ['nullable', 'integer', 'exists:departments,id'],
-            'position_id' => ['nullable', 'integer', 'exists:positions,id'],
+            'position_name' => ['nullable', 'string', 'max:100'],
             'phone_number' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:500'],
             'join_date' => ['required', 'date'],
@@ -79,12 +81,25 @@ class Edit extends Component
     {
         $this->validate();
 
+        // Find or create position by name
+        $positionId = null;
+        if (! empty($this->position_name)) {
+            $position = Position::firstOrCreate(
+                ['name' => trim($this->position_name)],
+                [
+                    'code' => strtoupper(Str::slug(trim($this->position_name))),
+                    'is_active' => true,
+                ]
+            );
+            $positionId = $position->id;
+        }
+
         $dto = new UpdateEmployeeDTO(
             name: $this->name,
             email: $this->email,
             roleId: $this->role_id,
             departmentId: $this->department_id,
-            positionId: $this->position_id,
+            positionId: $positionId,
             phoneNumber: $this->phone_number ?: null,
             address: $this->address ?: null,
             joinDate: $this->join_date,

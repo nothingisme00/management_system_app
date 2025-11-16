@@ -60,7 +60,9 @@
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Employee ID</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Department</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Role</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email Verified</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Last Login</th>
@@ -70,6 +72,14 @@
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse($users as $user)
                         <tr wire:key="user-{{ $user->id }}">
+                            {{-- Employee ID --}}
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-mono font-medium text-gray-900 dark:text-white">
+                                    {{ $user->employee?->employee_id ?? '-' }}
+                                </div>
+                            </td>
+
+                            {{-- User (Name + Email) --}}
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
@@ -83,6 +93,15 @@
                                     </div>
                                 </div>
                             </td>
+
+                            {{-- Department --}}
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">
+                                    {{ $user->employee?->department?->name ?? '-' }}
+                                </div>
+                            </td>
+
+                            {{-- Role --}}
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
                                     {{ $user->role?->name === 'SuperAdmin' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : '' }}
@@ -93,6 +112,8 @@
                                     {{ $user->role?->name ?? 'No Role' }}
                                 </span>
                             </td>
+
+                            {{-- Email Verified --}}
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                 @if($user->email_verified_at)
                                     <span class="text-green-600 dark:text-green-400">✓ Verified</span>
@@ -100,9 +121,13 @@
                                     <span class="text-red-600 dark:text-red-400">✗ Not Verified</span>
                                 @endif
                             </td>
+
+                            {{-- Last Login --}}
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                 {{ $user->last_login_at?->diffForHumans() ?? 'Never' }}
                             </td>
+
+                            {{-- Actions --}}
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <a href="{{ route('users.edit', $user->id) }}" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-3">Edit</a>
                                 @if($user->id !== auth()->id())
@@ -112,7 +137,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                            <td colspan="7" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
                                 No users found.
                             </td>
                         </tr>
