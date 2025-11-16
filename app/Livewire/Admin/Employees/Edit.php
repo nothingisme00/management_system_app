@@ -37,10 +37,6 @@ class Edit extends Component
 
     public string $employee_display_id = '';
 
-    public string $newPassword = '';
-
-    public bool $showResetPassword = false;
-
     public function mount(int $employee, EmployeeServiceInterface $employeeService): void
     {
         $this->employeeId = $employee;
@@ -76,7 +72,6 @@ class Edit extends Component
             'join_date' => ['required', 'date'],
             'termination_date' => ['nullable', 'date', 'after:join_date'],
             'employment_status' => ['required', 'string', 'in:active,inactive,on_leave,terminated'],
-            'newPassword' => ['nullable', 'string', 'min:8'],
         ];
     }
 
@@ -99,12 +94,14 @@ class Edit extends Component
 
         $updated = $employeeService->updateEmployee($this->employeeId, $dto);
 
-        if ($updated && $this->newPassword !== '') {
-            $employeeService->resetPassword($this->employeeId, $this->newPassword);
-        }
-
         session()->flash('success', 'Employee updated successfully.');
         $this->redirect(route('employees.index'), navigate: true);
+    }
+
+    public function resetPasswordToDefault(EmployeeServiceInterface $employeeService): void
+    {
+        $employeeService->resetPassword($this->employeeId, 'pass1234');
+        session()->flash('success', 'Password reset to default (pass1234) successfully.');
     }
 
     public function terminate(EmployeeServiceInterface $employeeService): void

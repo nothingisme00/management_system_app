@@ -74,13 +74,11 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Role <span class="text-red-500">*</span>
                         </label>
-                        <select wire:model="role_id"
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 @error('role_id') border-red-500 @enderror">
-                            <option value="">Select Role</option>
+                        <flux:select wire:model="role_id" placeholder="Select Role">
                             @foreach($roles as $role)
-                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                <flux:option value="{{ $role->id }}">{{ $role->name }}</flux:option>
                             @endforeach
-                        </select>
+                        </flux:select>
                         @error('role_id')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
@@ -91,13 +89,11 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Department <span class="text-red-500">*</span>
                         </label>
-                        <select wire:model="department_id"
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 @error('department_id') border-red-500 @enderror">
-                            <option value="">Select Department</option>
+                        <flux:select wire:model="department_id" placeholder="Select Department">
                             @foreach($departments as $department)
-                                <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                <flux:option value="{{ $department->id }}">{{ $department->name }}</flux:option>
                             @endforeach
-                        </select>
+                        </flux:select>
                         @error('department_id')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
@@ -108,13 +104,11 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Position
                         </label>
-                        <select wire:model="position_id"
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
-                            <option value="">Select Position</option>
+                        <flux:select wire:model="position_id" placeholder="Select Position">
                             @foreach($positions as $position)
-                                <option value="{{ $position->id }}">{{ $position->name }} (Level {{ $position->level }})</option>
+                                <flux:option value="{{ $position->id }}">{{ $position->name }} (Level {{ $position->level }})</flux:option>
                             @endforeach
-                        </select>
+                        </flux:select>
                     </div>
 
                     {{-- Join Date --}}
@@ -134,13 +128,12 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Employment Status <span class="text-red-500">*</span>
                         </label>
-                        <select wire:model="employment_status"
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                            <option value="on_leave">On Leave</option>
-                            <option value="terminated">Terminated</option>
-                        </select>
+                        <flux:select wire:model="employment_status">
+                            <flux:option value="active">Active</flux:option>
+                            <flux:option value="inactive">Inactive</flux:option>
+                            <flux:option value="on_leave">On Leave</flux:option>
+                            <flux:option value="terminated">Terminated</flux:option>
+                        </flux:select>
                     </div>
                 </div>
             </div>

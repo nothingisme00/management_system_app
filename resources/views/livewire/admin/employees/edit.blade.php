@@ -44,38 +44,36 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Role *</label>
-                        <select wire:model="role_id" class="w-full px-4 py-2 border dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+                        <flux:select wire:model="role_id">
                             @foreach($roles as $role)
-                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                <flux:option value="{{ $role->id }}">{{ $role->name }}</flux:option>
                             @endforeach
-                        </select>
+                        </flux:select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Department</label>
-                        <select wire:model="department_id" class="w-full px-4 py-2 border dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
-                            <option value="">Select Department</option>
+                        <flux:select wire:model="department_id" placeholder="Select Department">
                             @foreach($departments as $dept)
-                                <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                                <flux:option value="{{ $dept->id }}">{{ $dept->name }}</flux:option>
                             @endforeach
-                        </select>
+                        </flux:select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Position</label>
-                        <select wire:model="position_id" class="w-full px-4 py-2 border dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
-                            <option value="">Select Position</option>
+                        <flux:select wire:model="position_id" placeholder="Select Position">
                             @foreach($positions as $pos)
-                                <option value="{{ $pos->id }}">{{ $pos->name }}</option>
+                                <flux:option value="{{ $pos->id }}">{{ $pos->name }}</flux:option>
                             @endforeach
-                        </select>
+                        </flux:select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Employment Status *</label>
-                        <select wire:model="employment_status" class="w-full px-4 py-2 border dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                            <option value="on_leave">On Leave</option>
-                            <option value="terminated">Terminated</option>
-                        </select>
+                        <flux:select wire:model="employment_status">
+                            <flux:option value="active">Active</flux:option>
+                            <flux:option value="inactive">Inactive</flux:option>
+                            <flux:option value="on_leave">On Leave</flux:option>
+                            <flux:option value="terminated">Terminated</flux:option>
+                        </flux:select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Join Date *</label>
@@ -89,12 +87,16 @@
             </div>
 
             <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Reset Password (Optional)</h3>
-                <div class="max-w-md">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">New Password</label>
-                    <input type="password" wire:model="newPassword" placeholder="Leave blank to keep current password"
-                           class="w-full px-4 py-2 border dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Minimum 8 characters</p>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Reset Password to Default</h3>
+                <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-900 dark:text-white">Reset to Default Password</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Set password to: <code class="bg-gray-200 dark:bg-gray-600 px-2 py-0.5 rounded">pass1234</code></p>
+                    </div>
+                    <button type="button" wire:click="resetPasswordToDefault" wire:confirm="Are you sure you want to reset this employee's password to 'pass1234'?"
+                            class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition">
+                        Reset Password
+                    </button>
                 </div>
             </div>
 
