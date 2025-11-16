@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\Admin\Employees;
 
+use App\Contracts\Services\DepartmentServiceInterface;
 use App\Contracts\Services\EmployeeServiceInterface;
+use App\Contracts\Services\PositionServiceInterface;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -22,11 +24,23 @@ class Index extends Component
 
     public string $statusFilter = 'all';
 
+    public ?int $departmentFilter = null;
+
+    public ?int $positionFilter = null;
+
+    public string $sortField = 'userName';
+
+    public string $sortDirection = 'asc';
+
     public ?int $deleteId = null;
 
     protected $queryString = [
         'search' => ['except' => ''],
         'statusFilter' => ['except' => 'all'],
+        'departmentFilter' => ['except' => null],
+        'positionFilter' => ['except' => null],
+        'sortField' => ['except' => 'userName'],
+        'sortDirection' => ['except' => 'asc'],
     ];
 
     /**
@@ -43,6 +57,35 @@ class Index extends Component
     public function updatingStatusFilter(): void
     {
         $this->resetPage();
+    }
+
+    /**
+     * Reset pagination when department filter changes.
+     */
+    public function updatingDepartmentFilter(): void
+    {
+        $this->resetPage();
+    }
+
+    /**
+     * Reset pagination when position filter changes.
+     */
+    public function updatingPositionFilter(): void
+    {
+        $this->resetPage();
+    }
+
+    /**
+     * Sort by field.
+     */
+    public function sortBy(string $field): void
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
     }
 
     /**
@@ -85,8 +128,11 @@ class Index extends Component
     /**
      * Render component.
      */
-    public function render(EmployeeServiceInterface $employeeService)
-    {
+    public function render(
+        EmployeeServiceInterface $employeeService,
+        DepartmentServiceInterface $departmentService,
+        PositionServiceInterface $positionService
+    ) {
         $employees = collect($employeeService->getAllEmployees());
 
         // Apply search filter
@@ -109,16 +155,43 @@ class Index extends Component
             });
         }
 
+        // Apply department filter
+        if ($this->departmentFilter !== null) {
+            $employees = $employees->filter(function ($employee) {
+                return $employee->departmentId === $this->departmentFilter;
+            });
+        }
+
+        // Apply position filter
+        if ($this->positionFilter !== null) {
+            $employees = $employees->filter(function ($employee) {
+                return $employee->positionId === $this->positionFilter;
+            });
+        }
+
+        // Apply sorting
+        if ($this->sortDirection === 'asc') {
+            $employees = $employees->sortBy($this->sortField)->values();
+        } else {
+            $employees = $employees->sortByDesc($this->sortField)->values();
+        }
+
         // Paginate manually
         $perPage = 10;
         $currentPage = $this->getPage();
         $total = $employees->count();
         $employees = $employees->slice(($currentPage - 1) * $perPage, $perPage)->values();
 
+        // Get departments and positions for filters
+        $departments = collect($departmentService->getActiveDepartments());
+        $positions = collect($positionService->getActivePositions());
+
         return view('livewire.admin.employees.index', [
             'employees' => $employees,
             'total' => $total,
             'perPage' => $perPage,
+            'departments' => $departments,
+            'positions' => $positions,
         ])->layout('layouts.app', ['title' => 'Employees Management']);
     }
 }

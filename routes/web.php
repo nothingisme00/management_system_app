@@ -55,12 +55,9 @@ Route::middleware(['auth', 'verified', 'role:SuperAdmin', 'prevent.back'])->grou
 
     // Department Management Routes
     Route::get('departments', \App\Livewire\Admin\Departments\Index::class)->name('departments.index');
-
-    // Position Management Routes
-    Route::get('positions', \App\Livewire\Admin\Positions\Index::class)->name('positions.index');
 });
 
-// Admin Routes - Employee/Department/Position management only
+// Admin Routes - Employee/Department management only
 Route::middleware(['auth', 'verified', 'role:Admin', 'prevent.back'])->group(function () {
     Route::get('dashboard-admin', \App\Livewire\Admin\Dashboard::class)->name('dashboard.admin');
 
@@ -71,9 +68,6 @@ Route::middleware(['auth', 'verified', 'role:Admin', 'prevent.back'])->group(fun
 
     // Department Management Routes
     Route::get('departments', \App\Livewire\Admin\Departments\Index::class)->name('departments.index');
-
-    // Position Management Routes
-    Route::get('positions', \App\Livewire\Admin\Positions\Index::class)->name('positions.index');
 });
 
 Route::middleware(['auth', 'verified', 'role:HRD', 'prevent.back'])->group(function () {
