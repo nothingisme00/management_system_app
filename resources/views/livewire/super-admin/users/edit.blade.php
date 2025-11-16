@@ -68,14 +68,14 @@
                         @if($isSelfEdit)
                             <flux:select wire:model="role_id" placeholder="Select Role" disabled>
                                 @foreach($roles as $role)
-                                    <flux:option value="{{ $role->id }}">{{ $role->name }}</flux:option>
+                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
                                 @endforeach
                             </flux:select>
                             <p class="mt-1 text-xs text-amber-600 dark:text-amber-400">You cannot change your own role</p>
                         @else
                             <flux:select wire:model="role_id" placeholder="Select Role">
                                 @foreach($roles as $role)
-                                    <flux:option value="{{ $role->id }}">{{ $role->name }}</flux:option>
+                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
                                 @endforeach
                             </flux:select>
                         @endif

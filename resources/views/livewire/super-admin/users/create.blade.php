@@ -52,7 +52,7 @@
                         </label>
                         <flux:select wire:model="role_id" placeholder="Select Role">
                             @foreach($roles as $role)
-                                <flux:option value="{{ $role->id }}">{{ $role->name }}</flux:option>
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
                             @endforeach
                         </flux:select>
                         @error('role_id')

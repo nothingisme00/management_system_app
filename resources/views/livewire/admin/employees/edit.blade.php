@@ -46,7 +46,7 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Role *</label>
                         <flux:select wire:model="role_id">
                             @foreach($roles as $role)
-                                <flux:option value="{{ $role->id }}">{{ $role->name }}</flux:option>
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
                             @endforeach
                         </flux:select>
                     </div>
@@ -54,7 +54,7 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Department</label>
                         <flux:select wire:model="department_id" placeholder="Select Department">
                             @foreach($departments as $dept)
-                                <flux:option value="{{ $dept->id }}">{{ $dept->name }}</flux:option>
+                                <option value="{{ $dept->id }}">{{ $dept->name }}</option>
                             @endforeach
                         </flux:select>
                     </div>
@@ -62,17 +62,17 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Position</label>
                         <flux:select wire:model="position_id" placeholder="Select Position">
                             @foreach($positions as $pos)
-                                <flux:option value="{{ $pos->id }}">{{ $pos->name }}</flux:option>
+                                <option value="{{ $pos->id }}">{{ $pos->name }}</option>
                             @endforeach
                         </flux:select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Employment Status *</label>
                         <flux:select wire:model="employment_status">
-                            <flux:option value="active">Active</flux:option>
-                            <flux:option value="inactive">Inactive</flux:option>
-                            <flux:option value="on_leave">On Leave</flux:option>
-                            <flux:option value="terminated">Terminated</flux:option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="on_leave">On Leave</option>
+                            <option value="terminated">Terminated</option>
                         </flux:select>
                     </div>
                     <div>

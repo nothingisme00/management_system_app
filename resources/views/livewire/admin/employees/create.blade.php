@@ -76,7 +76,7 @@
                         </label>
                         <flux:select wire:model="role_id" placeholder="Select Role">
                             @foreach($roles as $role)
-                                <flux:option value="{{ $role->id }}">{{ $role->name }}</flux:option>
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
                             @endforeach
                         </flux:select>
                         @error('role_id')
@@ -91,7 +91,7 @@
                         </label>
                         <flux:select wire:model="department_id" placeholder="Select Department">
                             @foreach($departments as $department)
-                                <flux:option value="{{ $department->id }}">{{ $department->name }}</flux:option>
+                                <option value="{{ $department->id }}">{{ $department->name }}</option>
                             @endforeach
                         </flux:select>
                         @error('department_id')
@@ -106,7 +106,7 @@
                         </label>
                         <flux:select wire:model="position_id" placeholder="Select Position">
                             @foreach($positions as $position)
-                                <flux:option value="{{ $position->id }}">{{ $position->name }} (Level {{ $position->level }})</flux:option>
+                                <option value="{{ $position->id }}">{{ $position->name }} (Level {{ $position->level }})</option>
                             @endforeach
                         </flux:select>
                     </div>
@@ -129,10 +129,10 @@
                             Employment Status <span class="text-red-500">*</span>
                         </label>
                         <flux:select wire:model="employment_status">
-                            <flux:option value="active">Active</flux:option>
-                            <flux:option value="inactive">Inactive</flux:option>
-                            <flux:option value="on_leave">On Leave</flux:option>
-                            <flux:option value="terminated">Terminated</flux:option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="on_leave">On Leave</option>
+                            <option value="terminated">Terminated</option>
                         </flux:select>
                     </div>
                 </div>
