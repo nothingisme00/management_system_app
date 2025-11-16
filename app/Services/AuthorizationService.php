@@ -17,6 +17,8 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * Role names constants.
      */
+    private const ROLE_SUPERADMIN = 'SuperAdmin';
+
     private const ROLE_ADMIN = 'Admin';
 
     private const ROLE_HRD = 'HRD';
@@ -28,6 +30,11 @@ class AuthorizationService implements AuthorizationServiceInterface
     public function hasRole(User $user, string $roleName): bool
     {
         return $user->role?->name === $roleName;
+    }
+
+    public function isSuperAdmin(User $user): bool
+    {
+        return $this->hasRole($user, self::ROLE_SUPERADMIN);
     }
 
     public function isAdmin(User $user): bool
@@ -53,6 +60,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     public function getDashboardRoute(User $user): string
     {
         return match ($user->role?->name) {
+            self::ROLE_SUPERADMIN => 'dashboard.superadmin',
             self::ROLE_ADMIN => 'dashboard.admin',
             self::ROLE_HRD => 'dashboard.hrd',
             self::ROLE_MANAGER => 'dashboard.manager',
@@ -64,6 +72,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     public function canAccessDashboard(User $user, string $dashboardType): bool
     {
         $allowedDashboard = match ($user->role?->name) {
+            self::ROLE_SUPERADMIN => self::ROLE_SUPERADMIN,
             self::ROLE_ADMIN => self::ROLE_ADMIN,
             self::ROLE_HRD => self::ROLE_HRD,
             self::ROLE_MANAGER => self::ROLE_MANAGER,
